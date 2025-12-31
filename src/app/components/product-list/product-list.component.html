@@ -1,0 +1,66 @@
+<div class="container">
+  <h2>{{ title }}</h2>
+  
+  <!-- Interpolation -->
+  <p>Nombre de produits: {{ products.length }}</p>
+  
+  <!-- Two-Way Binding -->
+  <div class="search-box">
+    <label>Rechercher: </label>
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Nom du produit...">
+    <p>Vous recherchez: {{ searchTerm }}</p>
+  </div>
+
+  <!-- Event Binding -->
+  <button (click)="toggleDetails()" class="btn btn-primary">
+    {{ showDetails ? 'Masquer les détails' : 'Afficher les détails' }}
+  </button>
+
+  <!-- Directive *ngFor -->
+  <div class="product-grid">
+    <div *ngFor="let product of products" class="product-card">
+      
+      <!-- Property Binding -->
+      <img [src]="product.imageUrl" [alt]="product.name">
+      
+      <h3>{{ product.name }}</h3>
+      <p class="price">{{ product.price | currency:'EUR' }}</p>
+      
+      <!-- Directive *ngIf -->
+      <div *ngIf="showDetails">
+        <p class="description">{{ product.description }}</p>
+        <p><strong>Catégorie:</strong> {{ product.category }}</p>
+      </div>
+      
+      <!-- Directive [ngClass] -->
+      <span [ngClass]="{
+        'badge-success': product.inStock,
+        'badge-danger': !product.inStock
+      }">
+        {{ product.inStock ? 'En stock' : 'Rupture' }}
+      </span>
+
+      <!-- Directive [ngStyle] -->
+      <div [ngStyle]="{
+        'background-color': product.inStock ? '#d4edda' : '#f8d7da',
+        'padding': '5px',
+        'margin-top': '10px'
+      }">
+        <button (click)="onProductClick(product)" class="btn btn-info">
+          Voir
+        </button>
+        <button (click)="deleteProduct(product.id)" class="btn btn-danger">
+          Supprimer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Directive *ngIf avec else -->
+  <div *ngIf="products.length === 0; else hasProducts">
+    <p class="no-products">Aucun produit disponible</p>
+  </div>
+  <ng-template #hasProducts>
+    <p class="total">Total: {{ products.length }} produit(s)</p>
+  </ng-template>
+</div>
